@@ -5,9 +5,6 @@ var http = require('http'),
 function serveStaticFile(res, path, contentType, responseCode) {
   if(!responseCode) responseCode = 200;
   fs.readFile(__dirname + path, function (err, data) {
-      console.log(__dirname);
-      console.log(path);
-      console.log(data);
      if(err){
          res.writeHead(500, { 'Content-Type': 'text/plain'});
          res.end('500 - Internal Error');
@@ -37,4 +34,4 @@ http.createServer(function (req,res) {
     }
 }).listen(3000);
 
-console.log('Server started on local host:3000; press Ctrl - C to termiante');
+console.log('Server started on local host:3000; press Ctrl - C to terminate');
