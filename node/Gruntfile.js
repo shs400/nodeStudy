@@ -15,6 +15,7 @@ module.exports = function (grunt) {
        cafemocha: {
            all: { src: 'qa/test-*.js', options: { ui: 'tdd'},} // 모카플러그인 사용할 js 경로 설정, tdd 인터페이스를 사용
        },
+
         jshint: {
            app: ['app.js', 'public/js/**/*.js', 'qa/**/*.js'],  // 어떤파일이 jshint 대상인지 경로 설정, /**/ - 모든 서브디렉터리의 모든 파일
         },
