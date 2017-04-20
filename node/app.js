@@ -4,6 +4,7 @@ var hbs = require('express-handlebars').create({
     defaultLayout:'main',
     helpers: {
         section: function(name, options){
+            console.log('this._sections : ',this._sections);
             if(!this._sections) this._sections = {};
             this._sections[name] = options.fn(this);
             return null;
@@ -31,8 +32,17 @@ app.get('/',function (req, res) {
     res.render('home');
 });
 
-app.get('/aaa',function (req, res) {
-    res.render('jquery-test');
+app.get('/test',function (req, res) {
+    res.render('nursery-rhyme', { layout: 'main2'});
+});
+
+app.get('/data/nursery-rhyme',function (req, res) {
+    res.json({
+        animal: 'squirrel',
+        bodyPart: 'tail',
+        adjective: 'bushy',
+        noun: 'heck'
+    });
 });
 
 app.get('/foo',function (req, res) {
@@ -106,5 +116,5 @@ function getWeatherData(){
 
 
 app.listen(app.get('port'),function () {
-    console.log('Express started on http://localhost'+app.get('port')+'; press Ctrl - C to terminate')
+    console.log('Express started on http://localhost'+app.get('port')+'; press Ctrl - C to terminate');
 });
