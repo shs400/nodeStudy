@@ -26,6 +26,24 @@ app.use(function (req, res, next) {
 
     next();
 });
+
+app.use(require('body-parser').urlencoded({extended: true}));
+app.get('/newsletter',function (req, res) {
+   res.render('newsletter', { csrf: 'CSRF token goes here'});
+});
+
+app.post('/process',function (req, res) {
+    // console.log('Form (from querystring): ', req.query.form);
+    // console.log('CSRF token (from hidden form field): ', req.body._csrf);
+    // console.log('Name (from visible form field): ', req.body.name);
+    // console.log('Email (from visible form field): ', req.body.email);
+    // console.log('req : ',req)
+    console.log('req.xhr : ',req.xhr);
+    console.log('req.accepts("json,html") : ',req.accepts('json,html'));
+    if(req.xhr || req.accepts('json,html') === 'json') res.send({ success: true });
+    else res.redirect(303, '/thank-you'); // 에러가있다면  에러페이지로 리다이렉트
+});
+
 app.disable('x-powered-by');
 
 app.get('/',function (req, res) {
@@ -92,14 +110,14 @@ function getWeatherData(){
             {
                 name: 'Portland',
                 forecastUrl: 'http://www.wunderground.com/US/OR/Portland.html',
-                iconUrl: 'http://icons-ak.wxug.com/i/c/k/clouldy.gif',
+                iconUrl: 'http://icons-ak.wxug.com/i/c/k/cloudy.gif',
                 weather: 'Overcast',
                 temp: '54.1 F (12.3 C)',
             },
             {
                 name: 'Bend',
                 forecastUrl: 'http://www.wunderground.com/US/OR/Bend.html',
-                iconUrl: 'http://icons-ak.wxug.com/i/c/k/partlyclouldy.gif',
+                iconUrl: 'http://icons-ak.wxug.com/i/c/k/partlycloudy.gif',
                 weather: 'Partly Cloudy',
                 temp: '55.0 F (12.8 C)',
             },
