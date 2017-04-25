@@ -4,7 +4,7 @@ var hbs = require('express-handlebars').create({
     defaultLayout:'main',
     helpers: {
         section: function(name, options){
-            console.log('this._sections : ',this._sections);
+            // console.log('this._sections : ',this._sections);
             if(!this._sections) this._sections = {};
             this._sections[name] = options.fn(this);
             return null;
@@ -12,6 +12,20 @@ var hbs = require('express-handlebars').create({
     }
 });
 var fortune = require('./lib/fortune');
+var formidable = require('formidable');
+var jqupload = require('jquery-file-upload-middleware');
+
+app.use('/upload', function(req, res, next){
+   var now = Date.now();
+   jqupload.fileHandler({
+       uploadDir: function () {
+           return __dirname + '/public/uploads/' + now;
+       },
+       uploadUrl: function () {
+           return '/uploads/' + now;
+       },
+   })(req, res, next);
+});
 
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
@@ -89,6 +103,25 @@ app.get('/headers',function (req, res) {
         s += name + ': ' + req.headers[name] + '\n';
     }
     res.send(s);
+});
+
+app.get('/contest/vacation-photo', function (req, res) {
+    var now = new Date();
+    res.render('contest/vacation-photo', {
+        layout: 'main2',
+        year: now.getFullYear(),
+        month: now.getMonth(),
+    });
+});
+
+app.post('/contest/vacation-photo/:year/:month', function (req, res) {
+    var form = new formidable.IncomingForm();
+    form.parse(req, function (err, fields, files) {
+        if(err) return res.redirect(303, '/error');
+        console.log('received Fields: ', fields);
+        console.log('received Files: ', files);
+        res.redirect(303,'/thank-you');
+    });
 });
 
 // 커스텀 404 페이지
